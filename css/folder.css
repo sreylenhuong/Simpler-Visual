@@ -9,6 +9,13 @@
   - Closed footprint = one card size.
   - Open footprint = left cover + base + right cover = two card widths.
 */
+.stage {
+  -webkit-perspective: 1400px;
+  perspective: 1400px;
+  -webkit-perspective-origin: center center;
+  perspective-origin: center center;
+}
+
 .folder-system {
   position: relative;
   width: var(--folder-open-w);
@@ -53,8 +60,8 @@
 .cover {
   width: var(--cover-w);
   z-index: 7;
-  -webkit-backface-visibility: visible;
-  backface-visibility: visible;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   transition: transform 1.58s var(--ease-fold);
