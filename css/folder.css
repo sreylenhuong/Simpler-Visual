@@ -15,14 +15,16 @@
   height: var(--card-h);
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  -webkit-transform: translate3d(0, 6px, 0) scale(.98);
-  transform: translate3d(0, 6px, 0) scale(.98);
-  transition: transform 1s var(--ease-luxury);
+
+  /* Keep parent stable while covers rotate */
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  transition: none;
 }
 
 .stage.is-open .folder-system {
-  -webkit-transform: translate3d(0, 0, 0) scale(1);
-  transform: translate3d(0, 0, 0) scale(1);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 
 .base,
