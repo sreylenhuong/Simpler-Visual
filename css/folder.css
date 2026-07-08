@@ -60,13 +60,15 @@
 
 .left-cover {
   left: var(--cover-w);
+  right: auto;
   transform-origin: left center;
   -webkit-transform: rotateY(0deg);
   transform: rotateY(0deg);
 }
 
 .right-cover {
-  right: var(--cover-w);
+  left: calc(var(--cover-w) + var(--cover-w));
+  right: auto;
   transform-origin: right center;
   -webkit-transform: rotateY(0deg);
   transform: rotateY(0deg);
@@ -128,7 +130,9 @@
 }
 
 .left-cover .cover-print { left: 0; }
-.right-cover .cover-print { right: 0; }
+.right-cover .cover-print { 
+  left: calc(var(--card-w) * -0.5);
+  right: auto; }
 
 .cover-title {
   position: absolute;
