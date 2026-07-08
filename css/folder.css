@@ -77,6 +77,11 @@
   transform: rotateY(-176deg);
 }
 
+.stage.is-open .right-cover {
+  -webkit-transform: rotateY(176deg);
+  transform: rotateY(176deg);
+}
+
 .stage.is-closing .cover {
   transition-duration: .82s;
 }
@@ -96,10 +101,6 @@
   transform: rotateY(0deg);
 }
 
-.stage.is-open .right-cover {
-  -webkit-transform: rotateY(176deg);
-  transform: rotateY(176deg);
-}
 
 /* Closing must win over the open-cover transforms.
    This is intentionally placed after the .stage.is-open .right-cover rule,
