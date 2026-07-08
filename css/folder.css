@@ -67,7 +67,7 @@
 }
 
 .right-cover {
-  left: calc(var(--cover-w) + var(--cover-w));
+  left: var(--cover-w);
   right: auto;
   transform-origin: right center;
   -webkit-transform: rotateY(0deg);
@@ -130,9 +130,7 @@
 }
 
 .left-cover .cover-print { left: 0; }
-.right-cover .cover-print { 
-  left: calc(var(--card-w) * -0.5);
-  right: auto; }
+.right-cover .cover-print { right: 0; }
 
 .cover-title {
   position: absolute;
