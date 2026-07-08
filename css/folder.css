@@ -192,3 +192,25 @@
 .stage.is-opening .seal-trigger {
   pointer-events: none;
 }
+
+/* ================================
+   iOS safer 2.5D folder opening
+================================ */
+
+.is-ios .stage.is-open .left-cover {
+  -webkit-transform: translateX(calc(var(--cover-w) * -0.96)) skewY(-2deg) scaleX(.92);
+  transform: translateX(calc(var(--cover-w) * -0.96)) skewY(-2deg) scaleX(.92);
+}
+
+.is-ios .stage.is-open .right-cover {
+  -webkit-transform: translateX(calc(var(--cover-w) * .96)) skewY(2deg) scaleX(.92);
+  transform: translateX(calc(var(--cover-w) * .96)) skewY(2deg) scaleX(.92);
+}
+
+.is-ios .stage.is-closing .left-cover,
+.is-ios .stage.is-open.is-closing .left-cover,
+.is-ios .stage.is-closing .right-cover,
+.is-ios .stage.is-open.is-closing .right-cover {
+  -webkit-transform: translateX(0) skewY(0deg) scaleX(1);
+  transform: translateX(0) skewY(0deg) scaleX(1);
+}
