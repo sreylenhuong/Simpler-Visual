@@ -60,15 +60,13 @@
 
 .left-cover {
   left: var(--cover-w);
-  right: auto;
   transform-origin: left center;
   -webkit-transform: rotateY(0deg);
   transform: rotateY(0deg);
 }
 
 .right-cover {
-  left: var(--cover-w);
-  right: auto;
+  right: var(--cover-w);
   transform-origin: right center;
   -webkit-transform: rotateY(0deg);
   transform: rotateY(0deg);
@@ -184,4 +182,12 @@
 .stage.is-closing .seal-trigger,
 .stage.is-opening .seal-trigger {
   pointer-events: none;
+}
+
+/* ================================
+   Debug test 1
+   ================================ */
+
+.right-cover .cover-print {
+  display: none !important;
 }
