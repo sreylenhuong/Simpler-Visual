@@ -73,13 +73,13 @@
 }
 
 .stage.is-open .left-cover {
-  -webkit-transform: rotateY(-176deg);
-  transform: rotateY(-176deg);
+  -webkit-transform: rotateY(-164deg);
+  transform: rotateY(-164deg);
 }
 
 .stage.is-open .right-cover {
-  -webkit-transform: rotateY(176deg);
-  transform: rotateY(176deg);
+  -webkit-transform: rotateY(164deg);
+  transform: rotateY(164deg);
 }
 
 .stage.is-closing .cover {
@@ -123,8 +123,8 @@
   width: var(--card-w);
   height: var(--card-h);
   pointer-events: none;
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
+  -webkit-transform-style: flat;
+  transform-style: flat;
 }
 
 .left-cover .cover-print { left: 0; }
