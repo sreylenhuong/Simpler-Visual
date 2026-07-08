@@ -56,30 +56,31 @@
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   transition: transform 1.58s var(--ease-fold);
+  will-change: transform;
 }
 
 .left-cover {
   left: var(--cover-w);
   transform-origin: left center;
-  -webkit-transform: rotateY(0deg);
-  transform: rotateY(0deg);
+  -webkit-transform: translateZ(0.01px) rotateY(0deg);
+  transform: translateZ(0.01px) rotateY(0deg);
 }
 
 .right-cover {
   right: var(--cover-w);
   transform-origin: right center;
-  -webkit-transform: rotateY(0deg);
-  transform: rotateY(0deg);
+  -webkit-transform: translateZ(0.01px) rotateY(0deg);
+  transform: translateZ(0.01px) rotateY(0deg);
 }
 
 .stage.is-open .left-cover {
-  -webkit-transform: rotateY(-164deg);
-  transform: rotateY(-164deg);
+  -webkit-transform: translateZ(0.01px) rotateY(-164deg);
+  transform: translateZ(0.01px) rotateY(-164deg);
 }
 
 .stage.is-open .right-cover {
-  -webkit-transform: rotateY(164deg);
-  transform: rotateY(164deg);
+  -webkit-transform: translateZ(0.01px) rotateY(164deg);
+  transform: translateZ(0.01px) rotateY(164deg);
 }
 
 .stage.is-closing .cover {
@@ -92,13 +93,13 @@
   purely to is-closing, regardless of is-open still being present.
 */
 .stage.is-closing .left-cover {
-  -webkit-transform: rotateY(0deg);
-  transform: rotateY(0deg);
+  -webkit-transform: translateZ(0.01px) rotateY(0deg);
+  transform: translateZ(0.01px) rotateY(0deg);
 }
 
 .stage.is-closing .right-cover {
-  -webkit-transform: rotateY(0deg);
-  transform: rotateY(0deg);
+  -webkit-transform: translateZ(0.01px) rotateY(0deg);
+  transform: translateZ(0.01px) rotateY(0deg);
 }
 
 
@@ -107,13 +108,13 @@
    because the folder keeps is-open during closing so the cards stay physically
    inside the folder until both covers have finished folding shut. */
 .stage.is-open.is-closing .left-cover {
-  -webkit-transform: rotateY(0deg);
-  transform: rotateY(0deg);
+  -webkit-transform: translateZ(0.01px) rotateY(0deg);
+  transform: translateZ(0.01px) rotateY(0deg);
 }
 
 .stage.is-open.is-closing .right-cover {
-  -webkit-transform: rotateY(0deg);
-  transform: rotateY(0deg);
+  -webkit-transform: translateZ(0.01px) rotateY(0deg);
+  transform: translateZ(0.01px) rotateY(0deg);
 }
 
 /* Full cover print is clipped into two halves by the covers. */
@@ -182,12 +183,4 @@
 .stage.is-closing .seal-trigger,
 .stage.is-opening .seal-trigger {
   pointer-events: none;
-}
-
-/* ================================
-   Debug test 1
-   ================================ */
-
-.right-cover .cover-print {
-  display: none !important;
 }
