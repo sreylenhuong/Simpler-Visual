@@ -1,18 +1,31 @@
 /*
   Folder state is kept separate from card navigation.
-  iPhone/Safari stability approach:
+
+  Stability approach:
   - Cards are present as soon as the folder starts opening.
   - Card transitions are frozen until the covers finish opening.
-  - Covers are never hidden after opening, because re-showing hidden 3D layers
-    is what made the right cover glitch during close on iPhone.
+  - We do not rely on transitionend from the covers.
+    Safari/iPhone can be unreliable with 3D transform transition events.
 */
+
 function initFolder({ stage, openButton }) {
   const OPEN_PRESS_DELAY = 80;
   const CARD_READY_DELAY = 40;
-  const CLOSING_REPAINT_DELAY = 34;
+
+  // Match this with folder.css:
+  // .cover { transition: transform 1.58s var(--ease-fold); }
+  const OPEN_COVER_DURATION = 1580;
+
+  // Match this with:
+  // .stage.is-closing .cover { transition-duration: .82s; }
+  const CLOSE_COVER_DURATION = 820;
+
+  const CLOSE_CLEANUP_DELAY = 280;
 
   function nextFrame() {
-    return new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
+    return new Promise((resolve) => {
+      window.requestAnimationFrame(() => resolve());
+    });
   }
 
   async function twoPaints() {
@@ -20,104 +33,73 @@ function initFolder({ stage, openButton }) {
     await nextFrame();
   }
 
-  function waitForTransition(element, propertyName, fallbackMs) {
+  function wait(ms) {
     return new Promise((resolve) => {
-      if (!element) {
-        resolve();
-        return;
-      }
-
-      let done = false;
-
-      const finish = () => {
-        if (done) return;
-        done = true;
-        element.removeEventListener('transitionend', onEnd);
-        window.clearTimeout(timer);
-        resolve();
-      };
-
-      const onEnd = (event) => {
-        if (event.target !== element) return;
-        if (propertyName && event.propertyName !== propertyName) return;
-        finish();
-      };
-
-      const timer = window.setTimeout(finish, fallbackMs);
-      element.addEventListener('transitionend', onEnd);
+      window.setTimeout(resolve, ms);
     });
   }
 
   async function openInvitation() {
     if (
-      stage.classList.contains('is-closing') ||
-      stage.classList.contains('is-opening') ||
-      stage.classList.contains('is-open')
-    ) return;
+      stage.classList.contains("is-closing") ||
+      stage.classList.contains("is-opening") ||
+      stage.classList.contains("is-open")
+    ) {
+      return;
+    }
 
-    const leftCover = stage.querySelector('.left-cover');
-    const rightCover = stage.querySelector('.right-cover');
+    stage.classList.add("is-opening");
+    stage.classList.remove("is-ready", "is-closing");
 
-    stage.classList.add('is-opening');
-    stage.classList.remove('is-ready', 'is-closing');
+    // Cards are already inside the folder before the covers move.
+    stage.classList.add("is-revealed");
 
-    // Cards must already be inside the folder when the covers move.
-    // They are visible but frozen by CSS until .is-ready is added.
-    stage.classList.add('is-revealed');
+    await wait(OPEN_PRESS_DELAY);
+    await twoPaints();
 
-    window.setTimeout(async () => {
-      await twoPaints();
+    // This starts the cover animation.
+    stage.classList.add("is-open");
+    openButton.setAttribute("aria-expanded", "true");
 
-      stage.classList.add('is-open');
-      openButton.setAttribute('aria-expanded', 'true');
+    // Do not listen to transitionend here.
+    // Safari can stutter or misfire with 3D transform transition events.
+    await wait(OPEN_COVER_DURATION);
 
-      await Promise.all([
-        waitForTransition(leftCover, 'transform', 1350),
-        waitForTransition(rightCover, 'transform', 1350)
-      ]);
+    await twoPaints();
+    await wait(CARD_READY_DELAY);
 
-      // After the cover motion is finished, restore normal card handling.
-      await twoPaints();
-      window.setTimeout(() => {
-        stage.classList.add('is-ready');
-        stage.classList.remove('is-opening');
-      }, CARD_READY_DELAY);
-    }, OPEN_PRESS_DELAY);
+    stage.classList.add("is-ready");
+    stage.classList.remove("is-opening");
   }
 
-  function closeInvitation() {
-    if (!stage.classList.contains('is-open') || stage.classList.contains('is-closing')) return;
+  async function closeInvitation() {
+    if (
+      !stage.classList.contains("is-open") ||
+      stage.classList.contains("is-closing")
+    ) {
+      return;
+    }
 
-    const leftCover = stage.querySelector('.left-cover');
-    const rightCover = stage.querySelector('.right-cover');
+    openButton.setAttribute("aria-expanded", "false");
 
-    openButton.setAttribute('aria-expanded', 'false');
+    // Freeze cards first. Keep is-open during closing so cards remain inside
+    // until the covers have visually closed.
+    stage.classList.remove("is-ready");
+    stage.classList.add("is-closing");
 
-    // Remove card-ready state first so the card layer freezes.
-    // Keep is-open on while closing so the cards remain physically inside
-    // until both covers have completed their fold.
-    stage.classList.remove('is-ready');
-    stage.classList.add('is-closing');
+    await twoPaints();
 
-    // Safari needs a paint after the class change before measuring transitions.
-    window.setTimeout(async () => {
-      await twoPaints();
+    // Do not listen to transitionend here either.
+    await wait(CLOSE_COVER_DURATION);
 
-      await Promise.all([
-        waitForTransition(leftCover, 'transform', 1150),
-        waitForTransition(rightCover, 'transform', 1150)
-      ]);
+    stage.classList.remove("is-revealed");
+    stage.classList.remove("is-open");
 
-      stage.classList.remove('is-revealed');
-      stage.classList.remove('is-open');
-
-      window.setTimeout(() => {
-        stage.classList.remove('is-closing');
-      }, 280);
-    }, CLOSING_REPAINT_DELAY);
+    await wait(CLOSE_CLEANUP_DELAY);
+    stage.classList.remove("is-closing");
   }
 
-  openButton.addEventListener('click', openInvitation);
+  openButton.addEventListener("click", openInvitation);
 
   return { openInvitation, closeInvitation };
 }
